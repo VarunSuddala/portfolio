@@ -1,0 +1,315 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Varun — Cybersecurity Portfolio</title>
+  <meta name="description" content="Cybersecurity student portfolio: labs, projects, skills, and certifications." />
+  <style>
+    :root {
+      --bg: #000000;
+      --card: #121820;
+      --text: #e6f1ff;
+      --muted: #9fb3c8;
+      --accent: #01d66b;
+      --accent-2: #00a86b;
+      --radius: 16px;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Matrix card wrapper */
+    .matrix-card {
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      border: 1px solid rgba(1, 214, 107, 0.4);
+      box-shadow: 0 0 20px rgba(1, 214, 107, 0.3);
+      padding: 24px;
+      background: rgba(18, 24, 32, 0.85);
+      width: 100%;
+      max-width: 1400px;
+      height: 350px;
+      margin: 0 auto;
+    }
+
+    .matrix-card canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 0;
+    }
+
+    .matrix-card > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .container { width: min(1100px, 92%); margin: 0 auto; }
+    header { position: sticky; top: 0; backdrop-filter: blur(6px); background: rgba(11,15,19,0.95); border-bottom: 1px solid rgba(255,255,255,0.06); z-index: 5; }
+    .nav { display: flex; justify-content: space-between; align-items: center; padding: 14px 0; }
+    .brand { font-weight: 800; font-size: 1.2rem; }
+    .brand span { color: var(--accent); }
+    .menu { display: flex; gap: 20px; }
+    .hero { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; align-items: center; height: 100%; }
+    .hero h1 { font-size: clamp(2rem, 3.4vw + 1rem, 3.2rem); margin-bottom: 12px; }
+    .hero p { color: var(--muted); margin-bottom: 20px; }
+    .cta { display: inline-block; margin-right: 10px; padding: 12px 18px; background: var(--accent-2); color: white; border-radius: 10px; font-weight: 600; }
+    .cta.secondary { background: transparent; border: 1px solid var(--accent); color: var(--accent); }
+    .cta.secondary:hover { background: var(--accent); color: white; }
+
+    /* Profile image styling */
+    .profile-card {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      overflow: hidden;
+      width: 280px;
+      height: 320px;
+      margin: 0 auto;
+    }
+    .profile-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: var(--radius); padding: 18px; }
+    section { padding: 50px 0; }
+    h2 { margin-bottom: 14px; font-size: 1.6rem; }
+    .grid { display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); }
+    footer { padding: 30px 0; border-top: 1px solid rgba(255,255,255,0.06); text-align: center; color: var(--muted); font-size: 0.9rem; }
+    .stats .card { text-align: center; font-size: 1.2rem; font-weight: 600; }
+    .stats strong { display: block; font-size: 1.8rem; color: var(--accent); margin-bottom: 5px; }
+    .project-img { width: 100%; border-radius: 10px; margin-bottom: 10px; }
+    @media (max-width: 860px) { .hero { grid-template-columns: 1fr; text-align: center; } .matrix-card { height: auto; } .profile-card { width: 200px; height: 240px; } }
+
+    /* Skill Bars */
+    .skill-bar { background: rgba(255,255,255,0.08); border-radius: 10px; overflow: hidden; margin: 8px 0; }
+    .skill-bar span { display: block; height: 10px; background: var(--accent); border-radius: 10px; width: 0; transition: width 2s ease; }
+    .skill-label { display: flex; justify-content: space-between; font-size: 0.9rem; margin-top: 6px; color: var(--muted); }
+
+    /* Scroll Progress Bar */
+    #progressBar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0;
+      height: 4px;
+      background: var(--accent);
+      z-index: 9999;
+      transition: width 0.25s ease;
+    }
+  </style>
+</head>
+<body>
+  <div id="progressBar"></div>
+
+  <header>
+    <div class="container nav">
+      <div class="brand">Varun<span>Suddala</span></div>
+      <nav class="menu" aria-label="Main Navigation">
+        <a href="#about">About</a>
+        <a href="#skills">Skills</a>
+        <a href="#projects">Projects</a>
+        <a href="#certifications">Certifications</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- Hero with Matrix background inside card -->
+    <section class="hero matrix-card">
+      <canvas id="matrixCanvas"></canvas>
+      <div>
+        <h1>Cybersecurity Student & Security Enthusiast</h1>
+        <p>Passionate about ethical hacking, network defense, and cloud security. Building projects, strengthening technical skills, and preparing for a career in cybersecurity.</p>
+        <a class="cta" href="#projects">View Projects →</a>
+        <a class="cta secondary" href="resume.pdf" target="_blank">Download Resume</a>
+      </div>
+    </section>
+
+    <!-- About -->
+    <section id="about">
+      <h2>About Me</h2>
+      <p class="muted">I’m a cybersecurity student passionate about penetration testing, cloud security, and SOC operations. I aim to contribute to securing digital infrastructures, while continuously learning and sharing knowledge. My interests include vulnerability management, SIEM analysis, and secure application development.</p>
+    </section>
+
+    <!-- Stats -->
+    <section class="stats">
+      <div class="grid">
+        <div class="card"><strong>6+</strong><p>Cybersecurity Projects</p></div>
+        <div class="card"><strong>3</strong><p>Internships</p></div>
+        <div class="card"><strong>1</strong><p>Certifications</p></div>
+      </div>
+    </section>
+
+    <!-- Skills -->
+    <section id="skills">
+      <h2>Skills & Tools</h2>
+      <div class="grid">
+        <div class="card">
+          <strong>Security Tools</strong>
+          <div class="skill-label"><span>Nmap</span><span>90%</span></div>
+          <div class="skill-bar"><span data-skill="90"></span></div>
+          <div class="skill-label"><span>Burp Suite</span><span>85%</span></div>
+          <div class="skill-bar"><span data-skill="85"></span></div>
+          <div class="skill-label"><span>Wireshark</span><span>80%</span></div>
+          <div class="skill-bar"><span data-skill="80"></span></div>
+        </div>
+        <div class="card">
+          <strong>Defensive Skills</strong>
+          <div class="skill-label"><span>SIEM (Splunk)</span><span>75%</span></div>
+          <div class="skill-bar"><span data-skill="75"></span></div>
+          <div class="skill-label"><span>Incident Response</span><span>70%</span></div>
+          <div class="skill-bar"><span data-skill="70"></span></div>
+        </div>
+        <div class="card">
+          <strong>Web & App Security</strong>
+          <div class="skill-label"><span>OWASP Top 10</span><span>85%</span></div>
+          <div class="skill-bar"><span data-skill="85"></span></div>
+          <div class="skill-label"><span>Access Control</span><span>80%</span></div>
+          <div class="skill-bar"><span data-skill="80"></span></div>
+        </div>
+        <div class="card">
+          <strong>Languages</strong>
+          <div class="skill-label"><span>Python</span><span>85%</span></div>
+          <div class="skill-bar"><span data-skill="85"></span></div>
+          <div class="skill-label"><span>Bash</span><span>75%</span></div>
+          <div class="skill-bar"><span data-skill="75"></span></div>
+          <div class="skill-label"><span>SQL</span><span>70%</span></div>
+          <div class="skill-bar"><span data-skill="70"></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Projects -->
+    <section id="projects">
+      <h2>Projects & Labs</h2>
+      <div class="grid">
+        <article class="card">
+          <img src="siem-lab.png" alt="SIEM Lab Project" class="project-img">
+          <h3>SIEM Lab Setup</h3>
+          <p>Built a home lab with Splunk to detect, monitor, and analyze simulated attacks.</p>
+          <a href="#">Docs →</a>
+        </article>
+        <article class="card">
+          <img src="vulnerability-scanner.png" alt="Vulnerability Scanner Project" class="project-img">
+          <h3>Vulnerability Scanner</h3>
+          <p>Python-based tool for scanning common web vulnerabilities.</p>
+          <a href="#">View Repo →</a>
+        </article>
+        <article class="card">
+          <img src="password-manager.png" alt="Password Manager Project" class="project-img">
+          <h3>Password Manager</h3>
+          <p>Secure local password vault with AES encryption.</p>
+          <a href="#">Code →</a>
+        </article>
+      </div>
+    </section>
+
+    <!-- Certifications -->
+    <section id="certifications">
+      <h2>Certifications</h2>
+      <div class="grid">
+        <div class="card"><strong>CompTIA Security+ </strong><p>-Ongoing-</p></div>      </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact">
+      <h2>Contact</h2>
+      <p class="muted">Open for internships, collaborations, and security projects.</p>
+      <div class="card" style="display:grid; gap:10px;">
+        <div>Email: <a href="mailto:varunsuddala446@gmail.com">varunsuddala446@gmail.com</a></div>
+        <div>LinkedIn: <a href="https://www.linkedin.com/in/varun-suddala-b28621268">linkedin.com/in/varun-suddala</a></div>
+        <div>GitHub: <a href="https://github.com/VarunSuddala">github.com/VarunSuddala</a></div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">© <span id="year"></span> VarunSec • Built for cybersecurity learning & growth.</div>
+  </footer>
+
+  <script>
+    document.getElementById('year').textContent = new Date().getFullYear();
+
+    // Animate skill bars on scroll
+    const skillBars = document.querySelectorAll('.skill-bar span');
+    const options = { threshold: 0.3 };
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const bar = entry.target;
+          const width = bar.getAttribute('data-skill');
+          bar.style.width = width + '%';
+        }
+      });
+    }, options);
+
+    skillBars.forEach(bar => {
+      observer.observe(bar);
+    });
+
+    // Progress Bar Scroll Animation (entire page)
+    const progressBar = document.getElementById('progressBar');
+    window.addEventListener('scroll', () => {
+      const scrollTop = window.scrollY;
+      const docHeight = document.body.scrollHeight - window.innerHeight;
+      const progress = (scrollTop / docHeight) * 100;
+      progressBar.style.width = progress + '%';
+    });
+
+    // Matrix Hacker Background inside hero card
+    const canvas = document.getElementById('matrixCanvas');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = canvas.parentElement.offsetWidth;
+      canvas.height = canvas.parentElement.offsetHeight;
+    }
+
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+    const letters = 'アァカサタナハマヤャラワ0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    const fontSize = 14;
+    let columns = Math.floor(canvas.width / fontSize);
+    const drops = Array(columns).fill(1);
+
+    function draw() {
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#0f0';
+      ctx.font = fontSize + 'px monospace';
+
+      for (let i = 0; i < drops.length; i++) {
+        const text = letters.charAt(Math.floor(Math.random() * letters.length));
+        ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+        if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+          drops[i] = 0;
+        }
+        drops[i]++;
+      }
+    }
+
+    setInterval(draw, 33);
+  </script>
+</body>
+</html>
